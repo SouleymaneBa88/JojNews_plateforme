@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,3 +129,28 @@ import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "JOJ Dakar Admin",
+    "site_header": "JOJ Dakar 2026",
+    "site_brand": "JOJ Platform",
+
+    "welcome_sign": "Bienvenue dans l'administration JOJ Dakar",
+
+    "theme": "flatly",
+
+    "navbar": "navbar-dark bg-success",
+    "sidebar": "sidebar-dark-success",
+
+    "navigation_expanded": True,
+
+    "icons": {
+        "posts.Article": "fas fa-newspaper",
+        "posts.Commentaire": "fas fa-comments",
+        "posts.Categorie": "fas fa-list",
+    },
+
+    "custom_css": "css/admin_custom.css",
+    "site_logo": "images/jojdakar.png",
+    "login_logo": "images/jojdakar.png",
+}

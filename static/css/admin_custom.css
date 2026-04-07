@@ -1,0 +1,112 @@
+/* 🎨 COULEURS JOJ */
+:root {
+    --green: #00853f;
+    --yellow: #fcd116;
+    --red: #ce1126;
+    --dark: #121212;
+}
+
+/* 🌌 BACKGROUND GLOBAL */
+body {
+    background: linear-gradient(135deg, #f5f7fa, #e4efe9);
+}
+
+/* 🔝 NAVBAR PREMIUM */
+.navbar {
+    background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* 🧭 SIDEBAR */
+.main-sidebar {
+    background: var(--dark) !important;
+    border-right: 3px solid var(--green);
+}
+
+/* 🟢 LIENS */
+.nav-sidebar .nav-link {
+    border-radius: 8px;
+    margin: 5px 10px;
+    transition: all 0.3s ease;
+}
+
+/* ✨ HOVER ANIMÉ */
+.nav-sidebar .nav-link:hover {
+    background: linear-gradient(45deg, var(--green), var(--yellow));
+    transform: translateX(5px);
+    color: black !important;
+}
+
+/* 🎯 ACTIVE */
+.nav-sidebar .nav-link.active {
+    background: var(--green) !important;
+    color: white !important;
+}
+
+/* 🧱 CARDS */
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+/* 🔥 HOVER CARD */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+/* 🏷️ BADGES */
+.badge-admin {
+    background: var(--red);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+/* 🎯 TITRES */
+.content-header h1 {
+    font-weight: bold;
+    background: linear-gradient(45deg, var(--green), var(--yellow), var(--red));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* 📊 TABLE */
+.table thead {
+    background: var(--green);
+    color: white;
+}
+
+.table tbody tr:hover {
+    background: rgba(0, 133, 63, 0.1);
+}
+
+/* 🔘 BOUTONS */
+.btn-primary {
+    background: linear-gradient(45deg, var(--green), var(--yellow));
+    border: none;
+    color: black;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* ✨ ANIMATION FADE */
+.fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
