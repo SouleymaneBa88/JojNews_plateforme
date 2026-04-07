@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 def liste_article(request):
     article_list = Article.objects.all()
     context = {'list': article_list}
-    return render(request,'index.html',context)
+    return render(request,'article.html',context)
 
 def detail_traiteur(request, id):
     detail_article = get_object_or_404(Article,id = id)
@@ -18,27 +18,19 @@ def detail_traiteur(request, id):
 
     return render(request,'detail.html',context)
 
-@login_required
+@login_required(login_url='connexion/')
 def poste_commentaire(request):
+    form = PosterCommentaire()
     if request.method == 'POST':
-        form= PosterCommentaire(request.POST)
         if form.is_valid():
-            form.save()
-            form = PosterCommentaire()
-            
-          
-            return redirect('')
-            
+            form .save()
+            form = Commentaire
 
-        else:
-            form = PosterCommentaire()
-            # print(form.errors)
-
+            # return redirect()
     context = {
-        'form': form,
-        'page_title': 'Commentez'
+        'form':form
     }
-    return render(request, 'index.html',context)
+    return render(request,'index.html',context)
 
 @login_required
 def modifier_commentaire(request, id):

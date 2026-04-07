@@ -36,7 +36,7 @@ class Article(models.Model):
 
 
 class Commentaire(models.Model):
-    contenu = models.TextField()
+    contenu = models.TextField(verbose_name='Description')
 
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
