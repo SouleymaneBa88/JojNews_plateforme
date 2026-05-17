@@ -1,76 +1,80 @@
-from django.shortcuts import get_object_or_404, render
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from .models import Article, Categorie
-import requests
-# def article_detail(request, id):
-    # article = Article.objects.get(id=id)
-    # commentaires = article.commentaires.all()
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
 
-    # return render(request, "articles/article_detail.html", {
-    #     "article": article,
-    #     "commentaires": commentaires
-    # })
-def article_detail(request, id):
-
-    article = get_object_or_404(Article, id=id)
-    commentaires = article.commentaires.all()
-
-    # 🔥 génération du résumé
-    if request.method == "POST":
-
-        # si déjà existant → on ne recalcul pas (optimisation)
-        if not article.resume_ia:
-
-            prompt = f"""
-            Résume cet article simplement :
-
-            {article.contenu}
-            """
-
-            response = requests.post(
-                "http://localhost:11434/api/generate",
-                json={
-                    "model": "mistral",
-                    "prompt": prompt,
-                    "stream": False
-                }
-            )
-
-            data = response.json()
-            article.resume_ia = data["response"]
-
-            # 💾 SAUVEGARDE EN BASE
-            article.save()
-
-    return render(request, "articles/article_detail.html", {
-        "article": article,
-        "commentaires": commentaires
-    })
+from .models import Article, Categorie, Commentaire
+from .forms import CommentForm
 
 
-def article_list(request):
+class ArticleListView(ListView):
+    model = Article
+    template_name = 'liste_article.html'
+    context_object_name = 'articles'
 
-    categorie_id = request.GET.get("categorie")
 
-    categories = Categorie.objects.all()
+class CategorieListView(ListView):
+    model = Categorie
+    template_name = 'liste_categorie.html'
+    context_object_name = 'categories'
 
-    articles = Article.objects.all().order_by('-date_creation')
 
-    # FILTRE
-    if categorie_id:
-        articles = articles.filter(categorie_id=categorie_id)
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = 'detail_article.html'
+    context_object_name = 'article'
 
-    # PAGINATION
-    paginator = Paginator(articles, 4)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    page_number = request.GET.get("page")
+        context['comments'] = Commentaire.objects.filter(
+            article=self.object
+        ).order_by('-date_commentaire')
 
-    articles = paginator.get_page(page_number)
+        context['form'] = CommentForm()
 
-    return render(request, "articles/article_list.html", {
-        "articles": articles,
-        "categories": categories,
-        "categorie_active": categorie_id
-    })
-    
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            commentaire = form.save(commit=False)
+            commentaire.username = request.user
+            commentaire.article = self.object
+            commentaire.save()
+
+            return redirect('detail_article', pk=self.object.pk)
+
+        context = self.get_context_data()
+        context['form'] = form
+        return self.render_to_response(context)
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Commentaire
+    form_class = CommentForm
+    template_name = 'update_comment.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.username
+
+    def get_success_url(self):
+        return reverse('detail_article', kwargs={'pk': self.object.article.pk})
+
+
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Commentaire
+    template_name = 'delete_comment.html'
+
+    def get_success_url(self):
+        return reverse('detail_article', kwargs={'pk': self.object.article.pk})
+
+
+class InscriptionView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/register.html'
+    success_url = reverse_lazy('login')
