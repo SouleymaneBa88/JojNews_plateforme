@@ -57,7 +57,8 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
+        # 'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,10 +138,8 @@ JAZZMIN_SETTINGS = {
 
     "welcome_sign": "Bienvenue dans l'administration JOJ Dakar",
 
-    "theme": "flatly",
-
-    "navbar": "navbar-dark bg-success",
-    "sidebar": "sidebar-dark-success",
+    "site_logo": "images/logo.png",
+    "login_logo": "images/jojdakar.png",
 
     "navigation_expanded": True,
 
@@ -151,6 +150,18 @@ JAZZMIN_SETTINGS = {
     },
 
     "custom_css": "css/admin_custom.css",
-    "site_logo": "images/jojdakar.png",
-    "login_logo": "images/jojdakar.png",
 }
+
+LANGUAGE_CODE = 'fr-fr'
+
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
